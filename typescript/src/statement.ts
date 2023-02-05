@@ -31,6 +31,32 @@ type StatementData = {
 };
 
 function statement(invoice: Invoice, plays: Plays) {
+  return renderPlaintext(createStatementData(invoice, plays));
+}
+
+function renderPlaintext(statementData: StatementData) {
+  let result = `Statement for ${statementData.customer}\n`;
+
+  for (let perf of statementData.performances) {
+    // print line for this order
+    result += ` ${perf.play.name}: ${usd(perf.amount / 100)} (${
+      perf.audience
+    } seats)\n`;
+  }
+  result += `Amount owed is ${usd(statementData.totalAmount / 100)}\n`;
+  result += `You earned ${statementData.totalVolumeCredits} credits\n`;
+  return result;
+
+  function usd(aNumber: number) {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+    }).format(aNumber);
+  }
+}
+
+function createStatementData(invoice: Invoice, plays: Plays) {
   const enrichedPerformances = invoice.performances.map(enrichPerformance);
   const statementData = {
     customer: invoice.customer,
@@ -38,7 +64,7 @@ function statement(invoice: Invoice, plays: Plays) {
     totalAmount: totalAmount(enrichedPerformances),
     totalVolumeCredits: totalVolumeCredits(enrichedPerformances),
   };
-  return renderPlaintext(statementData);
+  return statementData;
 
   function enrichPerformance(aPerformance: Performance) {
     const play = playFor(aPerformance);
@@ -91,28 +117,6 @@ function statement(invoice: Invoice, plays: Plays) {
 
   function totalVolumeCredits(performances: EnrichedPerformance[]) {
     return performances.reduce((total, perf) => total + perf.volumeCredits, 0);
-  }
-}
-
-function renderPlaintext(statementData: StatementData) {
-  let result = `Statement for ${statementData.customer}\n`;
-
-  for (let perf of statementData.performances) {
-    // print line for this order
-    result += ` ${perf.play.name}: ${usd(perf.amount / 100)} (${
-      perf.audience
-    } seats)\n`;
-  }
-  result += `Amount owed is ${usd(statementData.totalAmount / 100)}\n`;
-  result += `You earned ${statementData.totalVolumeCredits} credits\n`;
-  return result;
-
-  function usd(aNumber: number) {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-    }).format(aNumber);
   }
 }
 
