@@ -36,11 +36,8 @@ export function createStatementData(invoice: Invoice, plays: Plays) {
   }
 
   function volumeCreditsFor(aPerformance: Performance & { play: Play }) {
-    let result = 0;
-    result += Math.max(aPerformance.audience - 30, 0);
-    if ("comedy" === aPerformance.play.type)
-      result += Math.floor(aPerformance.audience / 5);
-    return result;
+    return new PerformanceCalculator(aPerformance, aPerformance.play)
+      .volumeCredits;
   }
 
   function totalAmount(performances: EnrichedPerformance[]) {
@@ -78,5 +75,13 @@ class PerformanceCalculator {
         throw new Error(`unknown type: ${this.play.type}`);
     }
     return thisAmount;
+  }
+
+  get volumeCredits() {
+    let result = 0;
+    result += Math.max(this.aPerformance.audience - 30, 0);
+    if ("comedy" === this.play.type)
+      result += Math.floor(this.aPerformance.audience / 5);
+    return result;
   }
 }
