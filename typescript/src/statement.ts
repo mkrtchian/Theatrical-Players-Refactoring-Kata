@@ -18,9 +18,9 @@ type Invoice = {
 };
 
 function statement(invoice: Invoice, plays: Plays) {
-  let totalAmount = 0;
   let result = `Statement for ${invoice.customer}\n`;
 
+  let totalAmount = 0;
   for (let perf of invoice.performances) {
     totalAmount += amountFor(perf);
   }
