@@ -90,11 +90,7 @@ function statement(invoice: Invoice, plays: Plays) {
   }
 
   function totalVolumeCredits(performances: EnrichedPerformance[]) {
-    let result = 0;
-    for (let perf of performances) {
-      result += perf.volumeCredits;
-    }
-    return result;
+    return performances.reduce((total, perf) => total + perf.volumeCredits, 0);
   }
 }
 
