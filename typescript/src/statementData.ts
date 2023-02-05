@@ -25,7 +25,7 @@ export function createStatementData(invoice: Invoice, plays: Plays) {
     const result = {
       ...aPerformance,
       play,
-      amount: amountFor({ ...aPerformance, play }),
+      amount: calculator.amount,
       volumeCredits: volumeCreditsFor({ ...aPerformance, play }),
     };
     return result;
@@ -33,10 +33,6 @@ export function createStatementData(invoice: Invoice, plays: Plays) {
 
   function playFor(aPerformance: Performance) {
     return plays[aPerformance.playID];
-  }
-
-  function amountFor(aPerformance: Performance & { play: Play }) {
-    return new PerformanceCalculator(aPerformance, aPerformance.play).amount;
   }
 
   function volumeCreditsFor(aPerformance: Performance & { play: Play }) {
