@@ -26,18 +26,13 @@ export function createStatementData(invoice: Invoice, plays: Plays) {
       ...aPerformance,
       play,
       amount: calculator.amount,
-      volumeCredits: volumeCreditsFor({ ...aPerformance, play }),
+      volumeCredits: calculator.volumeCredits,
     };
     return result;
   }
 
   function playFor(aPerformance: Performance) {
     return plays[aPerformance.playID];
-  }
-
-  function volumeCreditsFor(aPerformance: Performance & { play: Play }) {
-    return new PerformanceCalculator(aPerformance, aPerformance.play)
-      .volumeCredits;
   }
 
   function totalAmount(performances: EnrichedPerformance[]) {
