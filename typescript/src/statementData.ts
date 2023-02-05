@@ -17,6 +17,7 @@ export function createStatementData(invoice: Invoice, plays: Plays) {
   return statementData;
 
   function enrichPerformance(aPerformance: Performance) {
+    const calculator = new PerformanceCalculator(aPerformance);
     const play = playFor(aPerformance);
     const result = {
       ...aPerformance,
@@ -68,4 +69,8 @@ export function createStatementData(invoice: Invoice, plays: Plays) {
   function totalVolumeCredits(performances: EnrichedPerformance[]) {
     return performances.reduce((total, perf) => total + perf.volumeCredits, 0);
   }
+}
+
+class PerformanceCalculator {
+  constructor(private readonly aPerformance: Performance) {}
 }
