@@ -17,7 +17,11 @@ type Invoice = {
   performances: Performance[];
 };
 
-type EnrichedPerformance = Performance & { play: Play; amount: number };
+type EnrichedPerformance = Performance & {
+  play: Play;
+  amount: number;
+  volumeCredits: number;
+};
 
 type StatementData = {
   customer: string;
@@ -37,6 +41,7 @@ function statement(invoice: Invoice, plays: Plays) {
       ...aPerformance,
       play,
       amount: amountFor({ ...aPerformance, play }),
+      volumeCredits: volumeCreditsFor({ ...aPerformance, play }),
     };
     return result;
   }
@@ -65,6 +70,14 @@ function statement(invoice: Invoice, plays: Plays) {
         throw new Error(`unknown type: ${aPerformance.play.type}`);
     }
     return thisAmount;
+  }
+
+  function volumeCreditsFor(aPerformance: Performance & { play: Play }) {
+    let result = 0;
+    result += Math.max(aPerformance.audience - 30, 0);
+    if ("comedy" === aPerformance.play.type)
+      result += Math.floor(aPerformance.audience / 5);
+    return result;
   }
 }
 
@@ -100,16 +113,8 @@ function renderPlaintext(statementData: StatementData) {
   function totalVolumeCredits() {
     let result = 0;
     for (let perf of statementData.performances) {
-      result += volumeCreditsFor(perf);
+      result += perf.volumeCredits;
     }
-    return result;
-  }
-
-  function volumeCreditsFor(aPerformance: EnrichedPerformance) {
-    let result = 0;
-    result += Math.max(aPerformance.audience - 30, 0);
-    if ("comedy" === aPerformance.play.type)
-      result += Math.floor(aPerformance.audience / 5);
     return result;
   }
 }
