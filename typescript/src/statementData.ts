@@ -36,25 +36,7 @@ export function createStatementData(invoice: Invoice, plays: Plays) {
   }
 
   function amountFor(aPerformance: Performance & { play: Play }) {
-    let thisAmount = 0;
-    switch (aPerformance.play.type) {
-      case "tragedy":
-        thisAmount = 40000;
-        if (aPerformance.audience > 30) {
-          thisAmount += 1000 * (aPerformance.audience - 30);
-        }
-        break;
-      case "comedy":
-        thisAmount = 30000;
-        if (aPerformance.audience > 20) {
-          thisAmount += 10000 + 500 * (aPerformance.audience - 20);
-        }
-        thisAmount += 300 * aPerformance.audience;
-        break;
-      default:
-        throw new Error(`unknown type: ${aPerformance.play.type}`);
-    }
-    return thisAmount;
+    return new PerformanceCalculator(aPerformance, aPerformance.play).amount;
   }
 
   function volumeCreditsFor(aPerformance: Performance & { play: Play }) {
@@ -79,4 +61,26 @@ class PerformanceCalculator {
     private readonly aPerformance: Performance,
     private readonly play: Play
   ) {}
+
+  get amount() {
+    let thisAmount = 0;
+    switch (this.play.type) {
+      case "tragedy":
+        thisAmount = 40000;
+        if (this.aPerformance.audience > 30) {
+          thisAmount += 1000 * (this.aPerformance.audience - 30);
+        }
+        break;
+      case "comedy":
+        thisAmount = 30000;
+        if (this.aPerformance.audience > 20) {
+          thisAmount += 10000 + 500 * (this.aPerformance.audience - 20);
+        }
+        thisAmount += 300 * this.aPerformance.audience;
+        break;
+      default:
+        throw new Error(`unknown type: ${this.play.type}`);
+    }
+    return thisAmount;
+  }
 }
