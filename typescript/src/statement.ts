@@ -20,10 +20,7 @@ type Invoice = {
 function statement(invoice: Invoice, plays: Plays) {
   let result = `Statement for ${invoice.customer}\n`;
 
-  let totalAmount = 0;
-  for (let perf of invoice.performances) {
-    totalAmount += amountFor(perf);
-  }
+  let totalAmount = xxtotalAmount();
   for (let perf of invoice.performances) {
     // print line for this order
     result += ` ${playFor(perf).name}: ${usd(amountFor(perf) / 100)} (${
@@ -40,6 +37,14 @@ function statement(invoice: Invoice, plays: Plays) {
       currency: "USD",
       minimumFractionDigits: 2,
     }).format(aNumber);
+  }
+
+  function xxtotalAmount() {
+    let totalAmount = 0;
+    for (let perf of invoice.performances) {
+      totalAmount += amountFor(perf);
+    }
+    return totalAmount;
   }
 
   function totalVolumeCredits() {
