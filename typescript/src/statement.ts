@@ -26,12 +26,15 @@ type EnrichedPerformance = Performance & {
 type StatementData = {
   customer: string;
   performances: EnrichedPerformance[];
+  totalAmount: number;
 };
 
 function statement(invoice: Invoice, plays: Plays) {
+  const enrichedPerformances = invoice.performances.map(enrichPerformance);
   const statementData = {
     customer: invoice.customer,
-    performances: invoice.performances.map(enrichPerformance),
+    performances: enrichedPerformances,
+    totalAmount: totalAmount(enrichedPerformances),
   };
   return renderPlaintext(statementData);
 
@@ -79,6 +82,14 @@ function statement(invoice: Invoice, plays: Plays) {
       result += Math.floor(aPerformance.audience / 5);
     return result;
   }
+
+  function totalAmount(performances: EnrichedPerformance[]) {
+    let result = 0;
+    for (let perf of performances) {
+      result += perf.amount;
+    }
+    return result;
+  }
 }
 
 function renderPlaintext(statementData: StatementData) {
@@ -90,7 +101,7 @@ function renderPlaintext(statementData: StatementData) {
       perf.audience
     } seats)\n`;
   }
-  result += `Amount owed is ${usd(totalAmount() / 100)}\n`;
+  result += `Amount owed is ${usd(statementData.totalAmount / 100)}\n`;
   result += `You earned ${totalVolumeCredits()} credits\n`;
   return result;
 
@@ -100,14 +111,6 @@ function renderPlaintext(statementData: StatementData) {
       currency: "USD",
       minimumFractionDigits: 2,
     }).format(aNumber);
-  }
-
-  function totalAmount() {
-    let result = 0;
-    for (let perf of statementData.performances) {
-      result += perf.amount;
-    }
-    return result;
   }
 
   function totalVolumeCredits() {
