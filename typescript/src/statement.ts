@@ -27,14 +27,10 @@ function statement(invoice: Invoice, plays: Plays) {
     customer: invoice.customer,
     performances: invoice.performances,
   };
-  return renderPlaintext(statementData, invoice, plays);
+  return renderPlaintext(statementData, plays);
 }
 
-function renderPlaintext(
-  statementData: StatementData,
-  invoice: Invoice,
-  plays: Plays
-) {
+function renderPlaintext(statementData: StatementData, plays: Plays) {
   let result = `Statement for ${statementData.customer}\n`;
 
   for (let perf of statementData.performances) {
