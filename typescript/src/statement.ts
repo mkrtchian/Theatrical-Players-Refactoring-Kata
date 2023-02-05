@@ -17,9 +17,11 @@ type Invoice = {
   performances: Performance[];
 };
 
+type EnrichPerformance = Performance & {};
+
 type StatementData = {
   customer: string;
-  performances: Performance[];
+  performances: EnrichPerformance[];
 };
 
 function statement(invoice: Invoice, plays: Plays) {
@@ -28,6 +30,11 @@ function statement(invoice: Invoice, plays: Plays) {
     performances: invoice.performances,
   };
   return renderPlaintext(statementData, plays);
+}
+
+function enrichPerformance(aPerformance: Performance) {
+  const result = { ...aPerformance };
+  return result;
 }
 
 function renderPlaintext(statementData: StatementData, plays: Plays) {
