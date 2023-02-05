@@ -27,6 +27,7 @@ type StatementData = {
   customer: string;
   performances: EnrichedPerformance[];
   totalAmount: number;
+  totalVolumeCredits: number;
 };
 
 function statement(invoice: Invoice, plays: Plays) {
@@ -35,6 +36,7 @@ function statement(invoice: Invoice, plays: Plays) {
     customer: invoice.customer,
     performances: enrichedPerformances,
     totalAmount: totalAmount(enrichedPerformances),
+    totalVolumeCredits: totalVolumeCredits(enrichedPerformances),
   };
   return renderPlaintext(statementData);
 
@@ -90,6 +92,14 @@ function statement(invoice: Invoice, plays: Plays) {
     }
     return result;
   }
+
+  function totalVolumeCredits(performances: EnrichedPerformance[]) {
+    let result = 0;
+    for (let perf of performances) {
+      result += perf.volumeCredits;
+    }
+    return result;
+  }
 }
 
 function renderPlaintext(statementData: StatementData) {
@@ -102,7 +112,7 @@ function renderPlaintext(statementData: StatementData) {
     } seats)\n`;
   }
   result += `Amount owed is ${usd(statementData.totalAmount / 100)}\n`;
-  result += `You earned ${totalVolumeCredits()} credits\n`;
+  result += `You earned ${statementData.totalVolumeCredits} credits\n`;
   return result;
 
   function usd(aNumber: number) {
@@ -111,14 +121,6 @@ function renderPlaintext(statementData: StatementData) {
       currency: "USD",
       minimumFractionDigits: 2,
     }).format(aNumber);
-  }
-
-  function totalVolumeCredits() {
-    let result = 0;
-    for (let perf of statementData.performances) {
-      result += perf.volumeCredits;
-    }
-    return result;
   }
 }
 
