@@ -18,10 +18,7 @@ export function createStatementData(invoice: Invoice, plays: Plays) {
 
   function enrichPerformance(aPerformance: Performance) {
     const play = playFor(aPerformance);
-    const calculator = new PerformanceCalculator(
-      aPerformance,
-      playFor(aPerformance)
-    );
+    const calculator = createPerformanceCalculator(aPerformance, play);
     const result = {
       ...aPerformance,
       play,
@@ -33,6 +30,17 @@ export function createStatementData(invoice: Invoice, plays: Plays) {
 
   function playFor(aPerformance: Performance) {
     return plays[aPerformance.playID];
+  }
+
+  function createPerformanceCalculator(aPerformance: Performance, play: Play) {
+    switch (play.type) {
+      case "tragedy":
+        return new TragedyCalculator(aPerformance, play);
+      case "comedy":
+        return new ComedyCalculator(aPerformance, play);
+      default:
+        throw new Error(`unknown type: ${play.type}`);
+    }
   }
 
   function totalAmount(performances: EnrichedPerformance[]) {
@@ -80,3 +88,7 @@ class PerformanceCalculator {
     return result;
   }
 }
+
+class TragedyCalculator extends PerformanceCalculator {}
+
+class ComedyCalculator extends PerformanceCalculator {}
