@@ -18,6 +18,10 @@ type Invoice = {
 };
 
 function statement(invoice: Invoice, plays: Plays) {
+  return renderPlaintext(invoice, plays);
+}
+
+function renderPlaintext(invoice: Invoice, plays: Plays) {
   let result = `Statement for ${invoice.customer}\n`;
 
   for (let perf of invoice.performances) {
