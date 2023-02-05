@@ -61,8 +61,6 @@ class PerformanceCalculator {
   get volumeCredits() {
     let result = 0;
     result += Math.max(this.aPerformance.audience - 30, 0);
-    if ("comedy" === this.play.type)
-      result += Math.floor(this.aPerformance.audience / 5);
     return result;
   }
 }
@@ -85,5 +83,12 @@ class ComedyCalculator extends PerformanceCalculator {
     }
     thisAmount += 300 * this.aPerformance.audience;
     return thisAmount;
+  }
+
+  get volumeCredits() {
+    let result = super.volumeCredits;
+    if ("comedy" === this.play.type)
+      result += Math.floor(this.aPerformance.audience / 5);
+    return result;
   }
 }
