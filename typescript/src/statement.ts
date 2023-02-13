@@ -40,24 +40,24 @@ function statement(invoice: Invoice, plays: Plays) {
   result += `You earned ${volumeCredits} credits\n`;
   return result;
 
-  function amountFor(perf: Performance) {
+  function amountFor(aPerformance: Performance) {
     let thisAmount = 0;
-    switch (playFor(perf).type) {
+    switch (playFor(aPerformance).type) {
       case "tragedy":
         thisAmount = 40000;
-        if (perf.audience > 30) {
-          thisAmount += 1000 * (perf.audience - 30);
+        if (aPerformance.audience > 30) {
+          thisAmount += 1000 * (aPerformance.audience - 30);
         }
         break;
       case "comedy":
         thisAmount = 30000;
-        if (perf.audience > 20) {
-          thisAmount += 10000 + 500 * (perf.audience - 20);
+        if (aPerformance.audience > 20) {
+          thisAmount += 10000 + 500 * (aPerformance.audience - 20);
         }
-        thisAmount += 300 * perf.audience;
+        thisAmount += 300 * aPerformance.audience;
         break;
       default:
-        throw new Error(`unknown type: ${playFor(perf).type}`);
+        throw new Error(`unknown type: ${playFor(aPerformance).type}`);
     }
     return thisAmount;
   }
@@ -66,12 +66,12 @@ function statement(invoice: Invoice, plays: Plays) {
     return plays[aPerformance.playID];
   }
 
-  function volumeCreditFor(perf: Performance) {
-    let volumeCredits = Math.max(perf.audience - 30, 0);
+  function volumeCreditFor(aPerformance: Performance) {
+    let result = Math.max(aPerformance.audience - 30, 0);
     // add extra credit for every ten comedy attendees
-    if ("comedy" === playFor(perf).type)
-      volumeCredits += Math.floor(perf.audience / 5);
-    return volumeCredits;
+    if ("comedy" === playFor(aPerformance).type)
+      result += Math.floor(aPerformance.audience / 5);
+    return result;
   }
 }
 
