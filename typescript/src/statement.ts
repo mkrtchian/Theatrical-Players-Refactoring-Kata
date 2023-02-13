@@ -24,6 +24,8 @@ function statement(invoice: Invoice, plays: Plays) {
 
   for (let perf of invoice.performances) {
     volumeCredits += volumeCreditFor(perf);
+  }
+  for (let perf of invoice.performances) {
     result += ` ${playFor(perf).name}: ${usd(amountFor(perf) / 100)} (${
       perf.audience
     } seats)\n`;
