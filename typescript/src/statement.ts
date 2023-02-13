@@ -21,7 +21,6 @@ function statement(invoice: Invoice, plays: Plays) {
   let totalAmount = 0;
   let result = `Statement for ${invoice.customer}\n`;
 
-  const volumeCredits = totalVolumeCredit();
   for (let perf of invoice.performances) {
     result += ` ${playFor(perf).name}: ${usd(amountFor(perf) / 100)} (${
       perf.audience
@@ -29,7 +28,7 @@ function statement(invoice: Invoice, plays: Plays) {
     totalAmount += amountFor(perf);
   }
   result += `Amount owed is ${usd(totalAmount / 100)}\n`;
-  result += `You earned ${volumeCredits} credits\n`;
+  result += `You earned ${totalVolumeCredit()} credits\n`;
   return result;
 
   function amountFor(aPerformance: Performance) {
@@ -75,11 +74,11 @@ function statement(invoice: Invoice, plays: Plays) {
   }
 
   function totalVolumeCredit() {
-    let volumeCredits = 0;
+    let result = 0;
     for (let perf of invoice.performances) {
-      volumeCredits += volumeCreditFor(perf);
+      result += volumeCreditFor(perf);
     }
-    return volumeCredits;
+    return result;
   }
 }
 
