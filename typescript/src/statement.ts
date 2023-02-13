@@ -21,11 +21,6 @@ function statement(invoice: Invoice, plays: Plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
-  const format = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format;
 
   for (let perf of invoice.performances) {
     // add volume credits
@@ -60,6 +55,14 @@ function statement(invoice: Invoice, plays: Plays) {
         throw new Error(`unknown type: ${playFor(aPerformance).type}`);
     }
     return thisAmount;
+  }
+
+  function format(aNumber: number) {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+    }).format(aNumber);
   }
 
   function playFor(aPerformance: Performance) {
