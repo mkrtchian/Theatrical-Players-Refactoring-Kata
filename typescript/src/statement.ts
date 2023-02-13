@@ -19,12 +19,9 @@ type Invoice = {
 
 function statement(invoice: Invoice, plays: Plays) {
   let totalAmount = 0;
-  let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
 
-  for (let perf of invoice.performances) {
-    volumeCredits += volumeCreditFor(perf);
-  }
+  const volumeCredits = totalVolumeCredit();
   for (let perf of invoice.performances) {
     result += ` ${playFor(perf).name}: ${usd(amountFor(perf) / 100)} (${
       perf.audience
@@ -75,6 +72,14 @@ function statement(invoice: Invoice, plays: Plays) {
     if ("comedy" === playFor(aPerformance).type)
       result += Math.floor(aPerformance.audience / 5);
     return result;
+  }
+
+  function totalVolumeCredit() {
+    let volumeCredits = 0;
+    for (let perf of invoice.performances) {
+      volumeCredits += volumeCreditFor(perf);
+    }
+    return volumeCredits;
   }
 }
 
