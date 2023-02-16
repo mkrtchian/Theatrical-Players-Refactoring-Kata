@@ -22,11 +22,7 @@ type StatementData = {
   performances: Performance[];
 };
 
-function renderPlainText(
-  invoice: Invoice,
-  plays: Plays,
-  statementData: StatementData
-) {
+function renderPlainText(plays: Plays, statementData: StatementData) {
   let result = `Statement for ${statementData.customer}\n`;
 
   for (let perf of statementData.performances) {
@@ -104,7 +100,7 @@ function statement(invoice: Invoice, plays: Plays) {
     performances: invoice.performances,
   };
 
-  return renderPlainText(invoice, plays, statementData);
+  return renderPlainText(plays, statementData);
 }
 
 export { statement };
