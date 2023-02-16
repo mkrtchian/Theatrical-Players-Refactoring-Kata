@@ -17,15 +17,14 @@ type Invoice = {
   performances: Performance[];
 };
 
-type StatementData = {
-  customer: string;
-  performances: Performance[];
+type EnrichPerformance = Performance & {
+  play: Play;
 };
 
-function enrichPerformance(aPerformance: Performance) {
-  const performanceCopy = { ...aPerformance };
-  return performanceCopy;
-}
+type StatementData = {
+  customer: string;
+  performances: EnrichPerformance[];
+};
 
 function renderPlainText(plays: Plays, statementData: StatementData) {
   let result = `Statement for ${statementData.customer}\n`;
@@ -106,6 +105,16 @@ function statement(invoice: Invoice, plays: Plays) {
   };
 
   return renderPlainText(plays, statementData);
+
+  function enrichPerformance(aPerformance: Performance) {
+    const performanceCopy = { ...aPerformance, play: playFor(aPerformance) };
+
+    return performanceCopy;
+  }
+
+  function playFor(aPerformance: Performance) {
+    return plays[aPerformance.playID];
+  }
 }
 
 export { statement };
