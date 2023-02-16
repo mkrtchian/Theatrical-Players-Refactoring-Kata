@@ -26,9 +26,7 @@ function statement(invoice: Invoice, plays: Plays) {
     } seats)\n`;
   }
 
-  const totalAmount = nomBidon();
-
-  result += `Amount owed is ${usd(totalAmount / 100)}\n`;
+  result += `Amount owed is ${usd(getTotalAmount() / 100)}\n`;
   result += `You earned ${totalVolumeCredit()} credits\n`;
   return result;
 
@@ -82,7 +80,7 @@ function statement(invoice: Invoice, plays: Plays) {
     return result;
   }
 
-  function nomBidon() {
+  function getTotalAmount() {
     let totalAmount = 0;
     for (let perf of invoice.performances) {
       totalAmount += amountFor(perf);
