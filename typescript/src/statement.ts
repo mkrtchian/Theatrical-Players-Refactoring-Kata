@@ -19,6 +19,7 @@ type Invoice = {
 
 type StatementData = {
   customer: string;
+  performances: Performance[];
 };
 
 function renderPlainText(
@@ -28,7 +29,7 @@ function renderPlainText(
 ) {
   let result = `Statement for ${statementData.customer}\n`;
 
-  for (let perf of invoice.performances) {
+  for (let perf of statementData.performances) {
     result += ` ${playFor(perf).name}: ${usd(amountFor(perf) / 100)} (${
       perf.audience
     } seats)\n`;
@@ -82,7 +83,7 @@ function renderPlainText(
 
   function totalVolumeCredit() {
     let result = 0;
-    for (let perf of invoice.performances) {
+    for (let perf of statementData.performances) {
       result += volumeCreditFor(perf);
     }
     return result;
@@ -90,7 +91,7 @@ function renderPlainText(
 
   function getTotalAmount() {
     let result = 0;
-    for (let perf of invoice.performances) {
+    for (let perf of statementData.performances) {
       result += amountFor(perf);
     }
     return result;
@@ -100,6 +101,7 @@ function renderPlainText(
 function statement(invoice: Invoice, plays: Plays) {
   const statementData = {
     customer: invoice.customer,
+    performances: invoice.performances,
   };
 
   return renderPlainText(invoice, plays, statementData);
