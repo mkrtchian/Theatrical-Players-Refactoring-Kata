@@ -17,7 +17,7 @@ type Invoice = {
   performances: Performance[];
 };
 
-function statement(invoice: Invoice, plays: Plays) {
+function renderPlainText(invoice: Invoice, plays: Plays) {
   let result = `Statement for ${invoice.customer}\n`;
 
   for (let perf of invoice.performances) {
@@ -87,6 +87,10 @@ function statement(invoice: Invoice, plays: Plays) {
     }
     return result;
   }
+}
+
+function statement(invoice: Invoice, plays: Plays) {
+  return renderPlainText(invoice, plays);
 }
 
 export { statement };
