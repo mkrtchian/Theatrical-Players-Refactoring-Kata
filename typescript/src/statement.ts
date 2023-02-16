@@ -18,7 +18,6 @@ type Invoice = {
 };
 
 function statement(invoice: Invoice, plays: Plays) {
-  let totalAmount = 0;
   let result = `Statement for ${invoice.customer}\n`;
 
   for (let perf of invoice.performances) {
@@ -27,9 +26,7 @@ function statement(invoice: Invoice, plays: Plays) {
     } seats)\n`;
   }
 
-  for (let perf of invoice.performances) {
-    totalAmount += amountFor(perf);
-  }
+  const totalAmount = nomBidon();
 
   result += `Amount owed is ${usd(totalAmount / 100)}\n`;
   result += `You earned ${totalVolumeCredit()} credits\n`;
@@ -83,6 +80,14 @@ function statement(invoice: Invoice, plays: Plays) {
       result += volumeCreditFor(perf);
     }
     return result;
+  }
+
+  function nomBidon() {
+    let totalAmount = 0;
+    for (let perf of invoice.performances) {
+      totalAmount += amountFor(perf);
+    }
+    return totalAmount;
   }
 }
 
