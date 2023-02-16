@@ -17,14 +17,16 @@ type Invoice = {
   performances: Performance[];
 };
 
-type StatementData = {};
+type StatementData = {
+  customer: string;
+};
 
 function renderPlainText(
   invoice: Invoice,
   plays: Plays,
   statementData: StatementData
 ) {
-  let result = `Statement for ${invoice.customer}\n`;
+  let result = `Statement for ${statementData.customer}\n`;
 
   for (let perf of invoice.performances) {
     result += ` ${playFor(perf).name}: ${usd(amountFor(perf) / 100)} (${
@@ -96,7 +98,9 @@ function renderPlainText(
 }
 
 function statement(invoice: Invoice, plays: Plays) {
-  const statementData = {};
+  const statementData = {
+    customer: invoice.customer,
+  };
 
   return renderPlainText(invoice, plays, statementData);
 }
