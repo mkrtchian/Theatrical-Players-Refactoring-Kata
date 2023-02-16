@@ -22,6 +22,11 @@ type StatementData = {
   performances: Performance[];
 };
 
+function enrichPerformance(aPerformance: Performance) {
+  const performanceCopy = { ...aPerformance };
+  return performanceCopy;
+}
+
 function renderPlainText(plays: Plays, statementData: StatementData) {
   let result = `Statement for ${statementData.customer}\n`;
 
@@ -97,7 +102,7 @@ function renderPlainText(plays: Plays, statementData: StatementData) {
 function statement(invoice: Invoice, plays: Plays) {
   const statementData = {
     customer: invoice.customer,
-    performances: invoice.performances,
+    performances: invoice.performances.map(enrichPerformance),
   };
 
   return renderPlainText(plays, statementData);
