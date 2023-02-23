@@ -20,6 +20,7 @@ type Invoice = {
 type EnrichPerformance = Performance & {
   play: Play;
   amount: number;
+  volumeCredits: number;
 };
 
 type StatementData = {
@@ -48,18 +49,10 @@ function renderPlainText(statementData: StatementData) {
     }).format(aNumber);
   }
 
-  function volumeCreditFor(aPerformance: EnrichPerformance) {
-    let result = Math.max(aPerformance.audience - 30, 0);
-    // add extra credit for every ten comedy attendees
-    if ("comedy" === aPerformance.play.type)
-      result += Math.floor(aPerformance.audience / 5);
-    return result;
-  }
-
   function totalVolumeCredit() {
     let result = 0;
     for (let perf of statementData.performances) {
-      result += volumeCreditFor(perf);
+      result += perf.volumeCredits;
     }
     return result;
   }
@@ -89,6 +82,7 @@ function statement(invoice: Invoice, plays: Plays) {
     const enrichedPerformance = {
       ...performanceWithPlay,
       amount: amountFor(performanceWithPlay),
+      volumeCredits: volumeCreditFor(performanceWithPlay),
     };
 
     return enrichedPerformance;
@@ -117,6 +111,14 @@ function statement(invoice: Invoice, plays: Plays) {
       default:
         throw new Error(`unknown type: ${aPerformance.play.type}`);
     }
+    return result;
+  }
+
+  function volumeCreditFor(aPerformance: Performance & { play: Play }) {
+    let result = Math.max(aPerformance.audience - 30, 0);
+    // add extra credit for every ten comedy attendees
+    if ("comedy" === aPerformance.play.type)
+      result += Math.floor(aPerformance.audience / 5);
     return result;
   }
 }
