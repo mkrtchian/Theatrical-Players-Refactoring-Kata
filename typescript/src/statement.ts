@@ -27,6 +27,7 @@ type StatementData = {
   customer: string;
   performances: EnrichPerformance[];
   totalVolumeCredit: number;
+  totalAmount: number;
 };
 
 function renderPlainText(statementData: StatementData) {
@@ -38,7 +39,7 @@ function renderPlainText(statementData: StatementData) {
     } seats)\n`;
   }
 
-  result += `Amount owed is ${usd(getTotalAmount() / 100)}\n`;
+  result += `Amount owed is ${usd(statementData.totalAmount / 100)}\n`;
   result += `You earned ${statementData.totalVolumeCredit} credits\n`;
   return result;
 
@@ -49,14 +50,6 @@ function renderPlainText(statementData: StatementData) {
       minimumFractionDigits: 2,
     }).format(aNumber);
   }
-
-  function getTotalAmount() {
-    let result = 0;
-    for (let perf of statementData.performances) {
-      result += perf.amount;
-    }
-    return result;
-  }
 }
 
 function statement(invoice: Invoice, plays: Plays) {
@@ -65,6 +58,7 @@ function statement(invoice: Invoice, plays: Plays) {
     customer: invoice.customer,
     performances,
     totalVolumeCredit: totalVolumeCredit(performances),
+    totalAmount: getTotalAmount(performances),
   };
 
   return renderPlainText(statementData);
@@ -122,6 +116,14 @@ function statement(invoice: Invoice, plays: Plays) {
     // add extra credit for every ten comedy attendees
     if ("comedy" === aPerformance.play.type)
       result += Math.floor(aPerformance.audience / 5);
+    return result;
+  }
+
+  function getTotalAmount(performances: EnrichPerformance[]) {
+    let result = 0;
+    for (let perf of performances) {
+      result += perf.amount;
+    }
     return result;
   }
 }
