@@ -26,6 +26,7 @@ type EnrichPerformance = Performance & {
 type StatementData = {
   customer: string;
   performances: EnrichPerformance[];
+  totalVolumeCredit: number;
 };
 
 function renderPlainText(statementData: StatementData) {
@@ -38,7 +39,7 @@ function renderPlainText(statementData: StatementData) {
   }
 
   result += `Amount owed is ${usd(getTotalAmount() / 100)}\n`;
-  result += `You earned ${totalVolumeCredit()} credits\n`;
+  result += `You earned ${statementData.totalVolumeCredit} credits\n`;
   return result;
 
   function usd(aNumber: number) {
@@ -47,14 +48,6 @@ function renderPlainText(statementData: StatementData) {
       currency: "USD",
       minimumFractionDigits: 2,
     }).format(aNumber);
-  }
-
-  function totalVolumeCredit() {
-    let result = 0;
-    for (let perf of statementData.performances) {
-      result += perf.volumeCredits;
-    }
-    return result;
   }
 
   function getTotalAmount() {
@@ -67,9 +60,11 @@ function renderPlainText(statementData: StatementData) {
 }
 
 function statement(invoice: Invoice, plays: Plays) {
+  const performances = invoice.performances.map(enrichPerformance);
   const statementData = {
     customer: invoice.customer,
-    performances: invoice.performances.map(enrichPerformance),
+    performances,
+    totalVolumeCredit: totalVolumeCredit(performances),
   };
 
   return renderPlainText(statementData);
@@ -110,6 +105,14 @@ function statement(invoice: Invoice, plays: Plays) {
         break;
       default:
         throw new Error(`unknown type: ${aPerformance.play.type}`);
+    }
+    return result;
+  }
+
+  function totalVolumeCredit(performances: EnrichPerformance[]) {
+    let result = 0;
+    for (let perf of performances) {
+      result += perf.volumeCredits;
     }
     return result;
   }
