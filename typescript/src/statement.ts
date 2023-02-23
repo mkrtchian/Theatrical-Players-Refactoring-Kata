@@ -27,7 +27,7 @@ type StatementData = {
   performances: EnrichPerformance[];
 };
 
-function renderPlainText(plays: Plays, statementData: StatementData) {
+function renderPlainText(statementData: StatementData) {
   let result = `Statement for ${statementData.customer}\n`;
 
   for (let perf of statementData.performances) {
@@ -79,7 +79,7 @@ function statement(invoice: Invoice, plays: Plays) {
     performances: invoice.performances.map(enrichPerformance),
   };
 
-  return renderPlainText(plays, statementData);
+  return renderPlainText(statementData);
 
   function enrichPerformance(aPerformance: Performance) {
     const performanceWithPlay = {
