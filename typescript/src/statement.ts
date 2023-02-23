@@ -52,7 +52,7 @@ function renderPlainText(statementData: StatementData) {
   }
 }
 
-function statement(invoice: Invoice, plays: Plays) {
+function createStatementData(invoice: Invoice, plays: Plays) {
   const performances = invoice.performances.map(enrichPerformance);
   const statementData = {
     customer: invoice.customer,
@@ -61,7 +61,7 @@ function statement(invoice: Invoice, plays: Plays) {
     totalAmount: getTotalAmount(performances),
   };
 
-  return renderPlainText(statementData);
+  return statementData;
 
   function enrichPerformance(aPerformance: Performance) {
     const performanceWithPlay = {
@@ -124,6 +124,10 @@ function statement(invoice: Invoice, plays: Plays) {
       0
     );
   }
+}
+
+function statement(invoice: Invoice, plays: Plays) {
+  return renderPlainText(createStatementData(invoice, plays));
 }
 
 export { statement };
