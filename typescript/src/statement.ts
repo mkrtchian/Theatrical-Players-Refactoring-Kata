@@ -30,7 +30,7 @@ function renderPlainText(plays: Plays, statementData: StatementData) {
   let result = `Statement for ${statementData.customer}\n`;
 
   for (let perf of statementData.performances) {
-    result += ` ${playFor(perf).name}: ${usd(amountFor(perf) / 100)} (${
+    result += ` ${perf.play.name}: ${usd(amountFor(perf) / 100)} (${
       perf.audience
     } seats)\n`;
   }
@@ -39,9 +39,9 @@ function renderPlainText(plays: Plays, statementData: StatementData) {
   result += `You earned ${totalVolumeCredit()} credits\n`;
   return result;
 
-  function amountFor(aPerformance: Performance) {
+  function amountFor(aPerformance: EnrichPerformance) {
     let result = 0;
-    switch (playFor(aPerformance).type) {
+    switch (aPerformance.play.type) {
       case "tragedy":
         result = 40000;
         if (aPerformance.audience > 30) {
@@ -56,7 +56,7 @@ function renderPlainText(plays: Plays, statementData: StatementData) {
         result += 300 * aPerformance.audience;
         break;
       default:
-        throw new Error(`unknown type: ${playFor(aPerformance).type}`);
+        throw new Error(`unknown type: ${aPerformance.play.type}`);
     }
     return result;
   }
@@ -69,14 +69,10 @@ function renderPlainText(plays: Plays, statementData: StatementData) {
     }).format(aNumber);
   }
 
-  function playFor(aPerformance: Performance) {
-    return plays[aPerformance.playID];
-  }
-
-  function volumeCreditFor(aPerformance: Performance) {
+  function volumeCreditFor(aPerformance: EnrichPerformance) {
     let result = Math.max(aPerformance.audience - 30, 0);
     // add extra credit for every ten comedy attendees
-    if ("comedy" === playFor(aPerformance).type)
+    if ("comedy" === aPerformance.play.type)
       result += Math.floor(aPerformance.audience / 5);
     return result;
   }
