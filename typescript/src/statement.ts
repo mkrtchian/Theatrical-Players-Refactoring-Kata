@@ -104,11 +104,10 @@ function statement(invoice: Invoice, plays: Plays) {
   }
 
   function totalVolumeCredit(performances: EnrichPerformance[]) {
-    let result = 0;
-    for (let perf of performances) {
-      result += perf.volumeCredits;
-    }
-    return result;
+    return performances.reduce(
+      (result, performance) => result + performance.volumeCredits,
+      0
+    );
   }
 
   function volumeCreditFor(aPerformance: Performance & { play: Play }) {
@@ -120,11 +119,10 @@ function statement(invoice: Invoice, plays: Plays) {
   }
 
   function getTotalAmount(performances: EnrichPerformance[]) {
-    let result = 0;
-    for (let perf of performances) {
-      result += perf.amount;
-    }
-    return result;
+    return performances.reduce(
+      (result, performance) => result + performance.amount,
+      0
+    );
   }
 }
 
