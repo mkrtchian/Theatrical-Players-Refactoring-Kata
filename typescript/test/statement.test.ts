@@ -1,10 +1,10 @@
-import { statement } from "../src/statement";
 import fs from "fs";
+import { plainTextStatement } from "../src/statement";
 
 test("example statement", () => {
   const invoice = JSON.parse(fs.readFileSync("test/invoice.json", "utf8"));
   const plays = JSON.parse(fs.readFileSync("test/plays.json", "utf8"));
-  expect(statement(invoice, plays)).toMatchSnapshot();
+  expect(plainTextStatement(invoice, plays)).toMatchSnapshot();
 });
 
 test("statement with new play types", () => {
@@ -13,6 +13,6 @@ test("statement with new play types", () => {
   );
   const plays = JSON.parse(fs.readFileSync("test/new_plays.json", "utf8"));
   expect(() => {
-    statement(invoice, plays);
+    plainTextStatement(invoice, plays);
   }).toThrow(/unknown type/);
 });
